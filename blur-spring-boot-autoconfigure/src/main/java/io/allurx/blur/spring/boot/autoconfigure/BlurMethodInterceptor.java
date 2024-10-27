@@ -51,7 +51,6 @@ import java.util.stream.Stream;
  */
 public class BlurMethodInterceptor implements MethodInterceptor {
 
-
     /**
      * Default constructor
      */
