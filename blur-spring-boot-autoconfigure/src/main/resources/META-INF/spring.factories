@@ -1,0 +1,2 @@
+org.springframework.boot.SpringApplicationRunListener=\
+io.allurx.blur.spring.boot.autoconfigure.SpringBootMainApplicationClassRunListener

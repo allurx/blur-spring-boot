@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.allurx</groupId>
+        <artifactId>blur-spring-boot</artifactId>
+        <version>3.0.0</version>
+    </parent>
+    <artifactId>blur-spring-boot-samples</artifactId>
+    <packaging>pom</packaging>
+    <name>blur-spring-boot-samples</name>
+    <description>blur-spring-boot-samples</description>
+
+    <modules>
+        <module>blur-spring-boot-sample-web</module>
+    </modules>
+
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
+</project>

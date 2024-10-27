@@ -1,0 +1,7 @@
+blur:
+  # io.allurx.blur.spring.boot.autoconfigure.SpringBootMainApplicationClassRunListener
+  # Specifies the main application class for the Spring Boot application.
+  # This prevents the test class from being treated as the main application class,
+  # which would cause AOP interceptors to target the package io.allurx.blur.spring.boot.sample.web.test.
+  # Therefore, the actual package of the main application class must be specified here.
+  pointcut-expression: execution(* io.allurx.blur.spring.boot.sample.web..*.*(..))

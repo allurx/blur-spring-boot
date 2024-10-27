@@ -1,2 +1,0 @@
-org.springframework.boot.SpringApplicationRunListener=\
-red.zyc.desensitization.boot.autoconfigure.SpringBootMainApplicationClassRunListener
