@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.allurx</groupId>
     <artifactId>blur-spring-boot</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
     <packaging>pom</packaging>
 
     <name>blur-spring-boot</name>
@@ -18,7 +18,7 @@
     </modules>
 
     <properties>
-        <blur.version>4.0.0</blur.version>
+        <blur.version>4.1.0</blur.version>
         <maven.compiler.source.version>21</maven.compiler.source.version>
         <maven.compiler.target.version>21</maven.compiler.target.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
