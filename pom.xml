@@ -18,7 +18,7 @@
     </modules>
 
     <properties>
-        <blur.version>4.0.0</blur.version>
+        <blur.version>4.1.0</blur.version>
         <maven.compiler.source.version>21</maven.compiler.source.version>
         <maven.compiler.target.version>21</maven.compiler.target.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
