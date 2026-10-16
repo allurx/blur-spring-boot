@@ -22,7 +22,8 @@ import io.allurx.blur.spring.boot.sample.web.model.Person;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.RequestEntity;
 import org.springframework.web.util.UriTemplate;
@@ -46,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see CustomizedResponseBlurController
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestRestTemplate
 class CustomizedResponseBlurTest {
 
     @Autowired
@@ -77,6 +79,8 @@ class CustomizedResponseBlurTest {
         ).getBody();
         assertNotNull(body);
         assertEquals("1*****@qq.com", body.getData());
+        assertEquals("200", body.getCode());
+        assertEquals("success", body.getMessage());
     }
 
     /**

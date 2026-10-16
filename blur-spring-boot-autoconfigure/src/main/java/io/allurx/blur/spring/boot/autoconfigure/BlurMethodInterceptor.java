@@ -65,12 +65,20 @@ public class BlurMethodInterceptor implements MethodInterceptor {
 
         IntStream.range(0, parameters.length)
                 .filter(i -> requiresBlur(parameters[i].getAnnotatedType()))
-                .forEach(i -> arguments[i] = Blur.blur(arguments[i], AnnotatedTypeToken.of(parameters[i].getAnnotatedType())));
+                .forEach(i -> arguments[i] = blurValue(arguments[i], parameters[i].getAnnotatedType()));
 
         Object proceed = invocation.proceed();
         AnnotatedType returnType = method.getAnnotatedReturnType();
 
-        return requiresBlur(returnType) ? Blur.blur(proceed, AnnotatedTypeToken.of(returnType)) : proceed;
+        return requiresBlur(returnType) ? blurValue(proceed, returnType) : proceed;
+    }
+
+    /**
+     * Retains the runtime annotation type while delegating null handling to the released Blur API.
+     */
+    private static Object blurValue(Object value, AnnotatedType type) {
+        return Blur.blur(value, new AnnotatedTypeToken<Object>(type) {
+        });
     }
 
     /**
