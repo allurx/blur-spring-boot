@@ -74,7 +74,7 @@ public class BlurConfig {
         public CustomizedResponse<Object> parse(CustomizedResponse<Object> response, AnnotatedParameterizedType annotatedParameterizedType) {
             AnnotatedType typeArgument = annotatedParameterizedType.getAnnotatedActualTypeArguments()[0];
             Object parsed = AnnotationParser.parse(response.getData(), typeArgument);
-            return new CustomizedResponse<>(parsed, response.getMessage(), response.getCode());
+            return new CustomizedResponse<>(parsed, response.getCode(), response.getMessage());
         }
 
         @Override

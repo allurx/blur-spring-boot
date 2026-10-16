@@ -6,9 +6,11 @@ To further customize the blurring, you can specify a custom pointcut expression 
 
 # Usage
 
-## Spring Boot Version
+## Requirements
 
-3.3.5
+Use JDK 25 or later and Spring Boot 4.1. The managed Blur and Spring Boot versions are declared in [pom.xml](pom.xml).
+
+Version 4.0.0 is not yet published. These requirements describe the current checkout; applications consuming a published 3.x artifact should use the corresponding 3.x documentation and stack.
 
 ## Maven Dependency
 
@@ -20,73 +22,11 @@ To further customize the blurring, you can specify a custom pointcut expression 
 </dependency>
 ```
 
-## Notes
-By default, this library enables blurring for methods returning Spring’s `ResponseEntity` type only. If your application uses a custom response entity, such as:
-```java
-public class CustomizedResponse<T> {
+## Custom response types
 
-    public T data;
+The interceptor processes annotated arguments and return values. It includes a `TypeParser` for the body of Spring's `ResponseEntity`. For a custom response wrapper, register a `TypeParser` bean that parses the payload and preserves the wrapper's other fields.
 
-    public String code;
-
-    public String message;
-
-    public CustomizedResponse() {}
-
-    public CustomizedResponse(T data, String code, String message) {
-        this.data = data;
-        this.code = code;
-        this.message = message;
-    }
-
-}
-```
-then you’ll need to configure a type parser to handle custom types for blurring.
-```java
-@Configuration
-public class BlurConfig {
-
-    /**
-     * Registers the {@code CustomizedResponseTypeParser} as a bean in the Spring context.
-     *
-     * @return {@link CustomizedResponseTypeParser}
-     */
-    @Bean
-    public TypeParser<CustomizedResponse<Object>, AnnotatedParameterizedType> typeParser() {
-        return new CustomizedResponseTypeParser();
-    }
-
-    /**
-     * Custom type parser to handle {@code CustomizedResponse} type data.
-     */
-    public static class CustomizedResponseTypeParser
-            implements TypeParser<CustomizedResponse<Object>, AnnotatedParameterizedType>, AopInfrastructureBean {
-
-        private final int order = AnnotationParser.randomOrder();
-
-        @Override
-        public CustomizedResponse<Object> parse(CustomizedResponse<Object> response, AnnotatedParameterizedType type) {
-            AnnotatedType typeArgument = type.getAnnotatedActualTypeArguments()[0];
-            Object blurredData = AnnotationParser.parse(response.getData(), typeArgument);
-            return new CustomizedResponse<>(blurredData, response.getMessage(), response.getCode());
-        }
-
-        @Override
-        public boolean support(Object value, AnnotatedType annotatedType) {
-            return value instanceof CustomizedResponse && annotatedType instanceof AnnotatedParameterizedType;
-        }
-
-        @Override
-        public int order() {
-            return order;
-        }
-    }
-}
-```
-This configuration blurs `CustomizedResponse` type objects, 
-typically applying blurring only to the actual data (`data`) within the response body. 
-After adding this type parser to the Spring context, 
-you need only annotate the generic parameter of the return object in the method with the blurring annotation to enable automatic blurring for `CustomizedResponse` type data.
+The working example uses [CustomizedResponse](blur-spring-boot-samples/blur-spring-boot-sample-web/src/main/java/io/allurx/blur/spring/boot/sample/web/model/CustomizedResponse.java) and its [type parser bean](blur-spring-boot-samples/blur-spring-boot-sample-web/src/main/java/io/allurx/blur/spring/boot/sample/web/config/BlurConfig.java). The parser is an `AopInfrastructureBean` so that it is not intercepted by the advisor that uses it.
 
 ## Examples
 
@@ -97,6 +37,28 @@ you need only annotate the generic parameter of the return object in the method 
 ### Blurring `CustomizedResponse` Type Data
 1. [Blurred method example](blur-spring-boot-samples/blur-spring-boot-sample-web/src/main/java/io/allurx/blur/spring/boot/sample/web/controller/CustomizedResponseBlurController.java)
 2. [Related test cases](blur-spring-boot-samples/blur-spring-boot-sample-web/src/test/java/io/allurx/blur/spring/boot/sample/web/test/CustomizedResponseBlurTest.java)
+
+# Upgrading from 3.x
+
+The unreleased 4.0.0 upgrade raises the Java baseline from 21 to 25 and moves from Spring Boot 3 to Spring Boot 4.1, Spring Framework 7, and Jackson 3. Applications that need the earlier stack should remain on the 3.x release line. Review the [Spring Boot migration guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) when upgrading the application.
+
+The starter uses Blur 6 and its current [masking rules](https://github.com/allurx/blur#notes), including Unicode code-point offsets and the object traversal rules supplied by annotation-parser. Existing `blur.pointcut-expression`, `blurAdvisor`, and `TypeParser` extension points remain available. JSON requests and responses in the sample now use Spring Boot's Jackson 3 integration.
+
+# Development
+
+Use JDK 25 and Maven 3.9.x. From the repository root, run:
+
+```shell
+mvn -B -ntp -Prelease -Dgpg.skip=true clean verify
+```
+
+This runs the local HTTP regression tests and builds release artifacts without signing or publishing them. CI uses the [shared allurx-build workflows](https://github.com/allurx/allurx-build) and [dependency-update policy](https://github.com/allurx/allurx-build/blob/main/docs/dependency-updates.md). Dependabot opens updates against `dev`; eligible routine updates merge after verification succeeds. Integration from `dev` into `main` remains a separate step.
+
+## Releases
+
+Formal `vX.Y.Z` tags use the [shared release workflow](https://github.com/allurx/allurx-build/blob/main/docs/release-guide.md). Before publishing, configure the `maven-central` Environment, namespace-authorized Central credentials, signing key, and tag protections described in that guide. Adding the workflow does not publish this checkout.
+
+The complete reactor, including the HTTP sample, is built and tested. Only the root POM, autoconfigure library, and dependency-only starter are published; the sample modules use Central's `skipPublishing` property. The starter's source and Javadoc companions contain its [dependency and configuration guide](blur-spring-boot-starter/README.md) and license because it has no Java implementation.
 
 # License
 [Apache License 2.0](LICENSE.txt)

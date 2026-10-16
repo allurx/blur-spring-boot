@@ -18,7 +18,7 @@ package io.allurx.blur.spring.boot.autoconfigure;
 
 import io.allurx.annotation.parser.AnnotationParser;
 import io.allurx.annotation.parser.type.TypeParser;
-import org.springframework.boot.ConfigurableBootstrapContext;
+import org.springframework.boot.bootstrap.ConfigurableBootstrapContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -62,6 +62,8 @@ public class SpringBootMainApplicationClassRunListener implements SpringApplicat
         // Clean up the ThreadLocal after the application is ready
         BlurAutoConfiguration.SPRING_APPLICATION_HOLDER.remove();
         // Register all TypeParsers in the AnnotationParser for use during parsing
-        context.getBeansOfType(TypeParser.class).values().forEach(AnnotationParser::addTypeParser);
+        for (TypeParser<?, ?> typeParser : context.getBeansOfType(TypeParser.class).values()) {
+            AnnotationParser.addTypeParser(typeParser);
+        }
     }
 }
