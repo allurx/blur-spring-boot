@@ -49,10 +49,10 @@ The starter uses Blur 6 and its current [masking rules](https://github.com/allur
 Use JDK 25 and Maven 3.9.x. From the repository root, run:
 
 ```shell
-mvn -B -ntp -Prelease -Dgpg.skip=true clean verify
+mvn -B -ntp clean verify
 ```
 
-This runs the local HTTP regression tests and builds release artifacts without signing or publishing them. CI uses the [shared allurx-build workflows](https://github.com/allurx/allurx-build) and [dependency-update policy](https://github.com/allurx/allurx-build/blob/main/docs/dependency-updates.md). Dependabot opens updates against `dev`; eligible routine updates merge after verification succeeds. Integration from `dev` into `main` remains a separate step.
+This runs the local HTTP regression tests without signing or publishing artifacts. To also verify sources and Javadoc, run `mvn -B -ntp -Prelease "-Dgpg.skip=true" clean verify`. CI uses the [shared allurx-build workflows](https://github.com/allurx/allurx-build) and [dependency-update policy](https://github.com/allurx/allurx-build/blob/main/docs/dependency-updates.md). Renovate is configured to open updates against `dev`; eligible routine updates merge after verification succeeds. Integration from `dev` into `main` remains a separate step.
 
 ## Releases
 
