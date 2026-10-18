@@ -10,15 +10,17 @@ To further customize the blurring, you can specify a custom pointcut expression 
 
 Use JDK 25 or later and Spring Boot 4.1. The managed Blur and Spring Boot versions are declared in [pom.xml](pom.xml).
 
-Version 4.0.0 is not yet published. These requirements describe the current checkout; applications consuming a published 3.x artifact should use the corresponding 3.x documentation and stack.
+These requirements apply to the 4.x release line. Applications using a 3.x artifact should use the corresponding 3.x documentation and stack.
 
 ## Maven Dependency
+
+Replace `LATEST_VERSION` with a published 4.x version from [Maven Central](https://central.sonatype.com/artifact/io.allurx/blur-spring-boot-starter).
 
 ```xml
 <dependency>
     <groupId>io.allurx</groupId>
     <artifactId>blur-spring-boot-starter</artifactId>
-    <version>${latest version}</version>
+    <version>LATEST_VERSION</version>
 </dependency>
 ```
 
@@ -40,9 +42,9 @@ The working example uses [CustomizedResponse](blur-spring-boot-samples/blur-spri
 
 # Upgrading from 3.x
 
-The unreleased 4.0.0 upgrade raises the Java baseline from 21 to 25 and moves from Spring Boot 3 to Spring Boot 4.1, Spring Framework 7, and Jackson 3. Applications that need the earlier stack should remain on the 3.x release line. Review the [Spring Boot migration guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) when upgrading the application.
+Version 4.0.0 raises the Java baseline from 21 to 25 and moves from Spring Boot 3 to Spring Boot 4.1, Spring Framework 7, and Jackson 3. Applications that need the earlier stack should remain on the 3.x release line. Review the [Spring Boot migration guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) when upgrading the application.
 
-The starter uses Blur 6 and its current [masking rules](https://github.com/allurx/blur#notes), including Unicode code-point offsets and the object traversal rules supplied by annotation-parser. Existing `blur.pointcut-expression`, `blurAdvisor`, and `TypeParser` extension points remain available. JSON requests and responses in the sample now use Spring Boot's Jackson 3 integration.
+The starter uses Blur 7. Masking offsets count Unicode code points instead of UTF-16 code units. The interceptor delegates null arguments and return values to the matching type parser; custom parsers can replace null inputs, and a null parser result is propagated instead of restoring the original value. Review the [Blur 7 migration notes](https://github.com/allurx/blur#upgrading-from-6x) when updating custom annotations and parsers. Existing `blur.pointcut-expression`, `blurAdvisor`, and `TypeParser` extension points remain available. JSON requests and responses in the sample now use Spring Boot's Jackson 3 integration.
 
 # Development
 

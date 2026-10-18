@@ -1,2 +1,5 @@
+# Copyright 2019 allurx
+# SPDX-License-Identifier: Apache-2.0
+
 server:
   port: 9000

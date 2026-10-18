@@ -1,3 +1,6 @@
+# Copyright 2024 allurx
+# SPDX-License-Identifier: Apache-2.0
+
 blur:
   # io.allurx.blur.spring.boot.autoconfigure.SpringBootMainApplicationClassRunListener
   # Specifies the main application class for the Spring Boot application.
