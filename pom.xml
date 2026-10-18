@@ -29,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0
     </modules>
 
     <properties>
-        <blur.version>6.0.0</blur.version>
+        <blur.version>7.0.0</blur.version>
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <spring-boot.version>4.1.1</spring-boot.version>
     </properties>

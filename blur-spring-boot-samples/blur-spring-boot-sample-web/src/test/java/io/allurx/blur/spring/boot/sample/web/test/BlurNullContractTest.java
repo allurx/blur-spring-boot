@@ -26,34 +26,39 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 class BlurNullContractTest {
 
     @Test
-    void nullArgumentsAndReturnsDoNotInvokeCustomParsers() {
-        var parser = new ReplacingParser(new Box<>("created-from-null"));
+    void customParsersCanReplaceNullArgumentsAndReturns() {
+        var replacement = new Box<>("created-from-null");
+        var parser = new ReplacingParser(replacement);
+        var target = new TestService(null);
         AnnotationParser.addTypeParser(parser);
         try {
-            assertNull(proxy().echo(null));
-            assertEquals(0, parser.calls);
-        } finally {
-            AnnotationParser.removeTypeParser(parser);
-        }
-    }
-
-    @Test
-    void nullParserResultsPreserveArgumentsAndReturns() {
-        var parser = new ReplacingParser(null);
-        var original = new Box<>("123456@qq.com");
-        AnnotationParser.addTypeParser(parser);
-        try {
-            assertSame(original, proxy().echo(original));
+            assertSame(replacement, proxy(target).process(null));
+            assertSame(replacement, target.received);
             assertEquals(2, parser.calls);
         } finally {
             AnnotationParser.removeTypeParser(parser);
         }
     }
 
-    private static EchoService proxy() {
-        var factory = new ProxyFactory(new EchoService());
+    @Test
+    void nullParserResultsPropagateThroughArgumentsAndReturns() {
+        var parser = new ReplacingParser(null);
+        var original = new Box<>("123456@qq.com");
+        var target = new TestService(original);
+        AnnotationParser.addTypeParser(parser);
+        try {
+            assertNull(proxy(target).process(original));
+            assertNull(target.received);
+            assertEquals(2, parser.calls);
+        } finally {
+            AnnotationParser.removeTypeParser(parser);
+        }
+    }
+
+    private static TestService proxy(TestService target) {
+        var factory = new ProxyFactory(target);
         factory.addAdvice(new BlurMethodInterceptor());
-        return (EchoService) factory.getProxy();
+        return (TestService) factory.getProxy();
     }
 
     /**
@@ -65,10 +70,18 @@ class BlurNullContractTest {
     /**
      * Exercises annotated parameters and returns in the same proxied invocation.
      */
-    public static class EchoService {
+    public static class TestService {
 
-        public Box<@Email String> echo(Box<@Email String> value) {
-            return value;
+        private final Box<String> result;
+        private Box<String> received = new Box<>("not-invoked");
+
+        public TestService(Box<String> result) {
+            this.result = result;
+        }
+
+        public Box<@Email String> process(Box<@Email String> value) {
+            received = value;
+            return result;
         }
     }
 
