@@ -1,5 +1,7 @@
 # blur-spring-boot
 
+English | [简体中文](README.zh-CN.md)
+
 This project integrates the [blur](https://github.com/allurx/blur) library into Spring Boot to enable automatic data blurring. Using Spring AOP, this library globally intercepts targeted methods to apply blurring (data masking) by default on all methods within the package of the Spring Boot application's main class and its sub-packages.
 
 To further customize the blurring, you can specify a custom pointcut expression using `blur`-prefixed parameters in the Spring configuration file. Alternatively, you can define an `Advisor` named `blurAdvisor` in the Spring context to gain more granular control over the blurring process.
